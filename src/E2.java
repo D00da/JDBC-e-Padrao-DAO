@@ -11,6 +11,7 @@ public class E2 {
         CategoriaDAO categoriaDAO = new CategoriaDAO();
         boolean loop = true;
         String id;
+        int intID;
         String descricao;
         while(loop){
             System.out.println("----------------------");
@@ -26,26 +27,27 @@ public class E2 {
             
             System.out.println("Qual opção deseja escolher ? ");
             String opcao = scanner.nextLine();
+            
             switch(opcao){
-                case "1":
-                    List<Categoria> categorias = new ArrayList<>();
-                    categorias = categoriaDAO.obterTodas();
+                case "1": //Listar todas
+                    List<Categoria> categorias = categoriaDAO.obterTodas();
                     for(int i = 0; i < categorias.size(); i++){
                         System.out.println(categorias.get(i).getId()+". "+categorias.get(i).getDescricao());
                     }
                     break;
-                case "2":
+                case "2": //Mostrar categoria por ID
                     System.out.println("Qual o id da categoria? ");
                     id = scanner.nextLine();
-                    String resultado = categoriaDAO.obterCategoria(Integer.parseInt(id));
-                    if(resultado!=null){
-                        System.out.println("Descrição: "+resultado);
+                    intID = Integer.parseInt(id);
+                    Categoria categoria = categoriaDAO.obterCategoria(intID);
+                    if(categoria.getDescricao()!=null){
+                        System.out.println("Descrição: "+categoria.getDescricao());
                     }
                     else{
                         System.out.println("Categoria não encontrada!");
                     }
                     break;
-                case "3":
+                case "3": //Inserir categoria
                     System.out.println("Insira a descrição da categoria: ");
                     descricao = scanner.nextLine();
                     if(categoriaDAO.inserir(descricao)){
@@ -55,30 +57,32 @@ public class E2 {
                         System.out.println("Não possível foi adicionar a categoria!");
                     }
                     break;
-                case "4":
+                case "4": //Atualizar categoria
                     System.out.println("Qual o id da categoria ? ");
-                    id = scanner.nextLine();              
-                    System.out.println("Descrição atual: "+categoriaDAO.obterCategoria(Integer.parseInt(id)));
+                    id = scanner.nextLine();
+                    intID = Integer.parseInt(id);
+                    System.out.println("Descrição atual: "+categoriaDAO.obterCategoria(intID).getDescricao());
                     System.out.println("Qual a nova descrição da categoria ? ");
                     descricao = scanner.nextLine();
-                    if(categoriaDAO.atualizar(descricao, Integer.parseInt(id))){
+                    if(categoriaDAO.atualizar(descricao, intID)){
                         System.out.println("Categoria atualizada com sucesso!");
                     }
                     else{
                         System.out.println("Não possível atualizar a categoria!");
                     }
                     break;
-                case "5":
+                case "5": //Remover categoria
                     System.out.println("Qual o id da categoria ? ");
                     id = scanner.nextLine();
-                    if(categoriaDAO.remover(Integer.parseInt(id))){
+                    intID = Integer.parseInt(id);
+                    if(categoriaDAO.remover(intID)){
                         System.out.println("Categoria removida com sucesso!");
                     }
                     else{
                         System.out.println("Não possível remover a categoria!");
                     }
                     break;
-                case "6":
+                case "6": //Fechar o programa
                     System.out.println("Saindo... ");
                     loop = false;
                     break;

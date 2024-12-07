@@ -31,8 +31,9 @@ public class CategoriaDAO {
         return id;
     }
     
-    public String obterCategoria(int id) {
-        String descricao= null;
+    //Função para obter categoria pelo ID da categoria
+    public Categoria obterCategoria(int id) {
+        Categoria categoria = new Categoria();
         try {
             Class.forName(JDBC_DRIVER);
             try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_SENHA);
@@ -40,24 +41,24 @@ public class CategoriaDAO {
                 preparedStatement.setInt(1, id); 
                 ResultSet resultSet = preparedStatement.executeQuery(); 
                 if (resultSet.next()) { 
-                    descricao = resultSet.getString("descricao"); 
+                    categoria.setId(id);
+                    categoria.setDescricao(resultSet.getString("descricao"));
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
             Logger.getLogger(CategoriaDAO.class.getName()).log(Level.SEVERE, null, e);
         }
-        return descricao;
+        return categoria;
     }
     
+    //Listar todas as categorias
     public List<Categoria> obterTodas(){
         List<Categoria> categorias = new ArrayList<>(); 
         int max_id = max_id();
         for (int i = 1; i <= max_id; i++){
-           String descricao = obterCategoria(i);
-           if(descricao != null){
-               Categoria categoria = new Categoria();
-               categoria.setId(i);
-               categoria.setDescricao(descricao);
+           Categoria categoria = new Categoria();
+           categoria = obterCategoria(i);
+           if(categoria.getDescricao() != null){
                categorias.add(categoria);
            }
         }
@@ -79,6 +80,7 @@ public class CategoriaDAO {
         return sucesso;
     }
     
+    //Função para as consultas padrão de INSERT, UPDATE e DELETE
     private boolean consulta_padrao(String consulta){
         boolean sucesso = false;
         try {
